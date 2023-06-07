@@ -303,12 +303,54 @@ class FormFieldOTPState extends State<FormFieldOTP> {
     return currentPin;
   }
 
+  // void _handlePaste(String str) {
+  //   if (str.length > widget.length) {
+  //     str = str.substring(0, widget.length);
+  //   }
+
+  //   for (int i = 0; i < widget.length; i++) {
+  //     if (i < str.length) {
+  //       String digit = str.substring(i, i + 1);
+  //       _textControllers[i]!.text = digit;
+  //       _pin[i] = digit;
+  //     } else {
+  //       _textControllers[i]!.text = '';
+  //       _pin[i] = "";
+  //     }
+  //   }
+
+  //   FocusScope.of(context).requestFocus(_focusNodes[widget.length - 1]);
+
+  //   String currentPin = _getCurrentPin();
+
+  //   // If there are no null values, that means the OTP is completed
+  //   // Call the `onCompleted` callback function provided
+  //   if (!_pin.contains(null) &&
+  //       !_pin.contains('') &&
+  //       currentPin.length == widget.length) {
+  //     widget.onCompleted?.call(currentPin);
+  //   }
+
+  //   // Call the `onChanged` callback function
+  //   if (widget.onChanged != null) {
+  //     widget.onChanged!(currentPin);
+  //   }
+  // }
+
   void _handlePaste(String str) {
-    if (str.length > widget.length) {
-      str = str.substring(0, widget.length);
+    // Menghapus karakter yang tidak valid, seperti spasi atau karakter non-digit
+    str = str.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Mengambil panjang form yang diinginkan
+    int formLength = 6; // Ganti dengan panjang form yang diinginkan
+
+    // Memotong string sesuai panjang form yang diinginkan
+    if (str.length > formLength) {
+      str = str.substring(0, formLength);
     }
 
-    for (int i = 0; i < widget.length; i++) {
+    // Mengisi form OTP
+    for (int i = 0; i < formLength; i++) {
       if (i < str.length) {
         String digit = str.substring(i, i + 1);
         _textControllers[i]!.text = digit;
@@ -319,19 +361,21 @@ class FormFieldOTPState extends State<FormFieldOTP> {
       }
     }
 
-    FocusScope.of(context).requestFocus(_focusNodes[widget.length - 1]);
+    // Fokus ke form terakhir
+    FocusScope.of(context).requestFocus(_focusNodes[formLength - 1]);
 
+    // Mendapatkan pin saat ini
     String currentPin = _getCurrentPin();
 
-    // If there are no null values, that means the OTP is completed
-    // Call the `onCompleted` callback function provided
+    // Jika tidak ada nilai null pada pin dan pin telah terisi lengkap
+    // Panggil callback `onCompleted`
     if (!_pin.contains(null) &&
         !_pin.contains('') &&
-        currentPin.length == widget.length) {
+        currentPin.length == formLength) {
       widget.onCompleted?.call(currentPin);
     }
 
-    // Call the `onChanged` callback function
+    // Panggil callback `onChanged`
     if (widget.onChanged != null) {
       widget.onChanged!(currentPin);
     }
