@@ -213,9 +213,7 @@ class FormFieldOTPState extends State<FormFieldOTP> {
             clipboardStatus: ClipboardStatus.pasteable,
             onCopy: () => _handleCopy(),
             onCut: () => _handleCut(),
-            onPaste: () => _handlePaste(
-              Clipboard.getData(Clipboard.kTextPlain).toString(),
-            ),
+            onPaste: () => _handlePaste(),
             onSelectAll: () => _handleSelectAll(),
           );
         },
@@ -237,7 +235,7 @@ class FormFieldOTPState extends State<FormFieldOTP> {
         ),
         onChanged: (String str) {
           if (str.length > 1) {
-            _handlePaste(str);
+            _handlePaste();
             return;
           }
 
@@ -337,47 +335,54 @@ class FormFieldOTPState extends State<FormFieldOTP> {
   //   }
   // }
 
-  void _handlePaste(String str) {
-    // Menghapus karakter yang tidak valid, seperti spasi atau karakter non-digit
-    str = str.replaceAll(RegExp(r'[^0-9]'), '');
+  void _handlePaste() async {
+    ClipboardData? clipboardData =
+        await Clipboard.getData(Clipboard.kTextPlain);
+    if (clipboardData != null) {
+      String str = clipboardData.text ?? '';
 
-    // Mengambil panjang form yang diinginkan
-    int formLength = 6; // Ganti dengan panjang form yang diinginkan
+      // Menghapus karakter yang tidak valid, seperti spasi atau karakter non-digit
+      str = str.replaceAll(RegExp(r'[^0-9]'), '');
 
-    // Memotong string sesuai panjang form yang diinginkan
-    if (str.length > formLength) {
-      str = str.substring(0, formLength);
-    }
+      // Mengambil panjang form dari widget.length
+      int formLength = widget.length;
 
-    // Mengisi form OTP
-    for (int i = 0; i < formLength; i++) {
-      if (i < str.length) {
-        String digit = str.substring(i, i + 1);
-        _textControllers[i]!.text = digit;
-        _pin[i] = digit;
-      } else {
-        _textControllers[i]!.text = '';
-        _pin[i] = "";
+      // Memotong string sesuai panjang form yang diinginkan
+      if (str.length > formLength) {
+        str = str.substring(0, formLength);
       }
-    }
 
-    // Fokus ke form terakhir
-    FocusScope.of(context).requestFocus(_focusNodes[formLength - 1]);
+      // Mengisi form OTP
+      for (int i = 0; i < formLength; i++) {
+        if (i < str.length) {
+          String digit = str.substring(i, i + 1);
+          _textControllers[i]!.text = digit;
+          _pin[i] = digit;
+        } else {
+          _textControllers[i]!.text = '';
+          _pin[i] = "";
+        }
+      }
 
-    // Mendapatkan pin saat ini
-    String currentPin = _getCurrentPin();
+      // Fokus ke form terakhir
+      // ignore: use_build_context_synchronously
+      FocusScope.of(context).requestFocus(_focusNodes[formLength - 1]);
 
-    // Jika tidak ada nilai null pada pin dan pin telah terisi lengkap
-    // Panggil callback `onCompleted`
-    if (!_pin.contains(null) &&
-        !_pin.contains('') &&
-        currentPin.length == formLength) {
-      widget.onCompleted?.call(currentPin);
-    }
+      // Mendapatkan pin saat ini
+      String currentPin = _getCurrentPin();
 
-    // Panggil callback `onChanged`
-    if (widget.onChanged != null) {
-      widget.onChanged!(currentPin);
+      // Jika tidak ada nilai null pada pin dan pin telah terisi lengkap
+      // Panggil callback `onCompleted`
+      if (!_pin.contains(null) &&
+          !_pin.contains('') &&
+          currentPin.length == formLength) {
+        widget.onCompleted?.call(currentPin);
+      }
+
+      // Panggil callback `onChanged`
+      if (widget.onChanged != null) {
+        widget.onChanged!(currentPin);
+      }
     }
   }
 
