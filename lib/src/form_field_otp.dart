@@ -2,7 +2,7 @@ part of form_input_otp;
 
 class FormFieldOTP extends StatefulWidget {
   /// TextField Controller
-  final OtpFieldController? controller;
+  final FormOtpController? controller;
 
   /// Number of the OTP Fields
   final int length;
@@ -301,40 +301,6 @@ class FormFieldOTPState extends State<FormFieldOTP> {
     return currentPin;
   }
 
-  // void _handlePaste(String str) {
-  //   if (str.length > widget.length) {
-  //     str = str.substring(0, widget.length);
-  //   }
-
-  //   for (int i = 0; i < widget.length; i++) {
-  //     if (i < str.length) {
-  //       String digit = str.substring(i, i + 1);
-  //       _textControllers[i]!.text = digit;
-  //       _pin[i] = digit;
-  //     } else {
-  //       _textControllers[i]!.text = '';
-  //       _pin[i] = "";
-  //     }
-  //   }
-
-  //   FocusScope.of(context).requestFocus(_focusNodes[widget.length - 1]);
-
-  //   String currentPin = _getCurrentPin();
-
-  //   // If there are no null values, that means the OTP is completed
-  //   // Call the `onCompleted` callback function provided
-  //   if (!_pin.contains(null) &&
-  //       !_pin.contains('') &&
-  //       currentPin.length == widget.length) {
-  //     widget.onCompleted?.call(currentPin);
-  //   }
-
-  //   // Call the `onChanged` callback function
-  //   if (widget.onChanged != null) {
-  //     widget.onChanged!(currentPin);
-  //   }
-  // }
-
   void _handlePaste() async {
     ClipboardData? clipboardData =
         await Clipboard.getData(Clipboard.kTextPlain);
@@ -421,7 +387,7 @@ class FormFieldOTPState extends State<FormFieldOTP> {
   }
 }
 
-class OtpFieldController {
+class FormOtpController {
   late FormFieldOTPState _formFieldOTPState;
 
   void setFormFieldOTPState(FormFieldOTPState state) {
