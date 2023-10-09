@@ -209,6 +209,10 @@ class FormFieldOTPState extends State<FormFieldOTP> {
           EditableTextState editableTextState,
         ) {
           return AdaptiveTextSelectionToolbar.editable(
+            onLiveTextInput: () => _onLiveTextInput(
+              index,
+              editableTextState.textEditingValue.text,
+            ),
             anchors: editableTextState.contextMenuAnchors,
             clipboardStatus: ClipboardStatus.pasteable,
             onCopy: () => _handleCopy(),
@@ -383,6 +387,26 @@ class FormFieldOTPState extends State<FormFieldOTP> {
         baseOffset: 0,
         extentOffset: _textControllers[i]!.text.length,
       );
+    }
+  }
+
+  _onLiveTextInput(int index, String currentText) {
+    // Pastikan teks saat ini hanya terdiri dari angka
+    final isNumeric = int.tryParse(currentText) != null;
+
+    if (!isNumeric) {
+      // Jika teks tidak valid, hapus karakter non-digit
+      final cleanedText = currentText.replaceAll(RegExp(r'[^0-9]'), '');
+
+      // Update teks dalam kotak masukan
+      final TextEditingController textController = _textControllers[index]!;
+      textController.text = cleanedText;
+
+      // Lakukan tindakan yang sesuai dengan teks yang telah dibersihkan
+      // Misalnya, Anda dapat memanggil callback onChanged
+      if (widget.onChanged != null) {
+        widget.onChanged!(cleanedText);
+      }
     }
   }
 }
