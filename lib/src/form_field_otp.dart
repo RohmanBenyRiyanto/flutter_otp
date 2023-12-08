@@ -219,6 +219,9 @@ class FormFieldOTPState extends State<FormFieldOTP> {
             onCut: () => _handleCut(),
             onPaste: () => _handlePaste(),
             onSelectAll: () => _handleSelectAll(),
+            onLookUp: () => _handleLookUp(),
+            onSearchWeb: () => _handleSearchWeb(),
+            onShare: () => _handleShare(),
           );
         },
         decoration: InputDecoration(
@@ -388,6 +391,18 @@ class FormFieldOTPState extends State<FormFieldOTP> {
         extentOffset: _textControllers[i]!.text.length,
       );
     }
+  }
+
+  _handleLookUp() {
+    // lookup
+  }
+
+  _handleSearchWeb() {
+    // search web
+  }
+
+  _handleShare() {
+    // share
   }
 
   _onLiveTextInput(int index, String currentText) {

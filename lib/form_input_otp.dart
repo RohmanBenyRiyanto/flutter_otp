@@ -1,7 +1,6 @@
 library form_input_otp;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 part 'src/form_field_otp.dart';

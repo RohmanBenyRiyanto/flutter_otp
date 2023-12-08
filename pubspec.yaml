@@ -2,7 +2,7 @@ publish_to: none
 
 name: form_input_otp
 description: Rohman Beny Riyanto - Form Input OTP
-version: 0.0.3
+version: 0.0.4
 homepage:
 
 environment:
